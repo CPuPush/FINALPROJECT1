@@ -8,7 +8,6 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/v1", routes);
-// app.use("/static", express.static(`${__dirname}/public`));
 
 const PORT = process.env.PORT || 4000;
 

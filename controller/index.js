@@ -1,6 +1,7 @@
 const db = require("../config/db");
 
 class reflectionController {
+  // !REGISTER
   static async register(req, res) {
     try {
       const { email, password } = req.body;
@@ -18,7 +19,7 @@ class reflectionController {
       return res.status(500).json(error);
     }
   }
-
+  // !LOGIN
   static async login(req, res){
     try {
       const {email, password} = req.body;

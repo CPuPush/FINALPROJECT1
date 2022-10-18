@@ -1,6 +1,7 @@
 const db = require("../config/db");
+const {generatorToken, verifyToken} = require('../helper/jwt');
 
-class reflectionController {
+class userController {
   // !REGISTER
   static async register(req, res) {
     try {
@@ -25,7 +26,7 @@ class reflectionController {
       const {email, password} = req.body;
       
       if(!email || !password){
-        return res.status(400).json({message:"Login failed"});
+        return res.status(400).json({message:"email or password is missing"});
       }
       
       let userData = await db.query(
@@ -34,8 +35,18 @@ class reflectionController {
       );
       if(!(userData["rows"][0])){
         return res.status(404).json({message: "Not found"});
-      }
-      return res.status(200).json({message: "Login successfully"});
+      };
+      // *TOKEN
+      const token = generatorToken(
+        {
+          id: userData["rows"][0].id,
+          email: userData["rows"][0].email,
+        }
+      );
+      console.log(token);
+      const decoded = verifyToken(token);
+      console.log(decoded.id);
+      return res.status(200).json({token});
     } catch (error) {
       return res.status(500).json(error)
     }
@@ -43,7 +54,7 @@ class reflectionController {
 
 }
 
-module.exports = reflectionController;
+module.exports = userController;
 
 
 

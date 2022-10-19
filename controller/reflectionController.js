@@ -7,7 +7,7 @@ class reflectionController{
     try {
       const owner_id = res.dataUser.id;
       let result = await db.query(
-        `select * from reflections where owner_id = ($1);`, [owner_id]
+        `select * from reflections where owner_id = ($1) ORDER BY id ASC;`, [owner_id]
       );
       let results = result.rows;
       return res.status(200).json(results);
@@ -30,18 +30,20 @@ class reflectionController{
 
   static async createReflection(req, res){
     try {
-      const {success, low_point, take_away, created_date, modified_date} = req.body;
+      const {success, low_point, take_away} = req.body;
+      const created_date = new Date();
+      const modified_date = new Date();
       const owner_id = res.dataUser.id;
 
-      if(!success || !low_point || !take_away || !created_date || !modified_date){
-        return res.status(400).json("Bad Request");
+      if(!success || !low_point || !take_away ){
+        return res.status(400).json("Failed To Create Reflection");
       }
 
       await db.query(
         `INSERT INTO reflections (success, low_point, take_away, owner_id, created_date, modified_date) VALUES ($1, $2, $3, $4, $5, $6);`,
         [success, low_point, take_away, owner_id, created_date, modified_date]
       );
-      return res.status(201).json({message: "Reflection has been created"})
+      return res.status(201).json({message: "Reflection Created Successfully"})
     } catch (error) {
       return res.status(500).json(error);
     }
@@ -49,18 +51,19 @@ class reflectionController{
 
   static async editReflectionById(req, res){
     try {
-      const {success, low_point, take_away, created_date, modified_date} = req.body;
+      const {success, low_point, take_away} = req.body;
       const id = req.params.id;
+      const modified_date = new Date();
       
-      if(!success || !low_point || !take_away || !created_date || !modified_date){
-        return res.status(400).json("Bad Request");
+      if(!success || !low_point || !take_away ){
+        return res.status(400).json("Failed To Create Reflection");
       }
 
       await db.query(
-        `UPDATE reflections SET success=$1,low_point=$2, take_away=$3,created_date=$4, modified_date=$5 WHERE id=$6;`,
-        [success, low_point, take_away, created_date, modified_date,id]
+        `UPDATE reflections SET success=$1,low_point=$2, take_away=$3, modified_date=$4 WHERE id=$5;`,
+        [success, low_point, take_away, modified_date, id]
       );
-      return res.status(200).json({message: "Update Reflection Successfully"});
+      return res.status(200).json({message: "Reflection Updated Successfully"});
       
     } catch (error) {
       return res.status(500).json(error);

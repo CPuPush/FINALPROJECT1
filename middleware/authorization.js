@@ -13,8 +13,6 @@ async function authorization(req, res, next){
       return res.status(404).json({message: "Reflection not found"});
     }
     let reflectionDataIdAuth = reflectionData.rows[0].owner_id;
-    console.log(authenticatedUserId);
-    console.log(reflectionDataIdAuth);
     if(authenticatedUserId === reflectionDataIdAuth){
       return next()
     }else{

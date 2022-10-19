@@ -43,9 +43,6 @@ class userController {
           email: userData["rows"][0].email,
         }
       );
-      console.log(token);
-      const decoded = verifyToken(token);
-      console.log(decoded.id);
       return res.status(200).json({token});
     } catch (error) {
       return res.status(500).json(error)

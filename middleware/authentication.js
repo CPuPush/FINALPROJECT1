@@ -3,7 +3,7 @@ const {verifyToken} = require('../helper/jwt');
 
 async function authentication(req, res, next){
   try {
-    const token = req.headers.authorization;
+    const token = req.headers["x-access-token"];
     const userDecoded = verifyToken(token);
 
     let userData = await db.query(
